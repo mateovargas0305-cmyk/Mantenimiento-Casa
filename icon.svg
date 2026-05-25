@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Fondo redondeado -->
+  <rect width="512" height="512" rx="112" fill="#1a1d27"/>
+  <!-- Techo -->
+  <polygon points="256,90 420,230 92,230" fill="#6366f1"/>
+  <!-- Cuerpo de la casa -->
+  <rect x="122" y="222" width="268" height="216" fill="#6366f1"/>
+  <!-- Puerta -->
+  <rect x="214" y="316" width="84" height="122" rx="8" fill="#1a1d27"/>
+  <!-- Ventana izquierda -->
+  <rect x="148" y="268" width="68" height="60" rx="6" fill="#a5b4fc"/>
+  <!-- Ventana derecha -->
+  <rect x="296" y="268" width="68" height="60" rx="6" fill="#a5b4fc"/>
+  <!-- Cruz ventana izquierda -->
+  <rect x="179" y="268" width="6" height="60" fill="#1a1d27" opacity="0.4"/>
+  <rect x="148" y="295" width="68" height="6" fill="#1a1d27" opacity="0.4"/>
+  <!-- Cruz ventana derecha -->
+  <rect x="327" y="268" width="6" height="60" fill="#1a1d27" opacity="0.4"/>
+  <rect x="296" y="295" width="68" height="6" fill="#1a1d27" opacity="0.4"/>
+</svg>
