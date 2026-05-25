@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create *)",
+      "Bash(del src\\\\counter.ts src\\\\main.ts tsconfig.json)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Mateo\\\\Desktop\\\\Mateo\\\\Mantenimiento Casa\\\\node_modules\" -Force -Hidden | Select-Object Name | Where-Object { $_.Name -eq \".bin\" })"
+    ]
+  }
+}
