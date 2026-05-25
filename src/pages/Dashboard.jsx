@@ -64,7 +64,7 @@ export default function Dashboard() {
         porcentaje={resumen.porcentaje}
       />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, margin: '24px 0' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, margin: '20px 0' }}>
         {[
           { label: 'Presupuesto total', value: formatCurrency(presupuesto.total), color: '#94a3b8' },
           { label: 'Gastado', value: formatCurrency(resumen.gastado), color: '#22c55e' },
@@ -78,7 +78,7 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 20 }}>
         <Card title="Tareas por estado">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {Object.entries(porEstado).map(([estado, data]) => (

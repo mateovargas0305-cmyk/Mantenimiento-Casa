@@ -149,7 +149,7 @@ export default function TaskModal({ tarea, zonas, onClose, onSave, onDelete, umb
               style={{ ...inputStyle, minHeight: 80, resize: 'vertical' }} placeholder="Descripción detallada..." />
           </Field>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
             <Field label="Zona">
               <select value={form.zona} onChange={e => set('zona', e.target.value)} style={inputStyle}>
                 {zonas.map(z => <option key={z} value={z}>{z}</option>)}
@@ -167,7 +167,7 @@ export default function TaskModal({ tarea, zonas, onClose, onSave, onDelete, umb
             </Field>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
             <Field label="Responsable">
               <select value={form.responsable || ''} onChange={e => set('responsable', e.target.value || null)} style={inputStyle}>
                 <option value="">Sin asignar</option>
