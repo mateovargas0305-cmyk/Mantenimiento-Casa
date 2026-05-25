@@ -6,6 +6,7 @@ import Tasks from './pages/Tasks'
 import Calendar from './pages/Calendar'
 import Budget from './pages/Budget'
 import Settings from './pages/Settings'
+import Shopping from './pages/Shopping'
 
 function RequireAuth({ children }) {
   const user = localStorage.getItem('currentUser')
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="tareas" element={<Tasks />} />
           <Route path="calendario" element={<Calendar />} />
           <Route path="presupuesto" element={<Budget />} />
+          <Route path="compras" element={<Shopping />} />
           <Route path="config" element={<Settings />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

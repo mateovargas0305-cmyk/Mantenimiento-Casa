@@ -29,32 +29,20 @@ export default function Dashboard() {
   )
 
   async function handleSave(datos, id) {
-    if (id) {
-      await actualizarTarea(id, datos, usuario, datos.titulo)
-    } else {
-      await crearTarea(datos, usuario)
-    }
+    if (id) await actualizarTarea(id, datos, usuario, datos.titulo)
+    else await crearTarea(datos, usuario)
   }
 
-  function abrirTarea(t) {
-    setTareaSeleccionada(t)
-    setModalOpen(true)
-  }
-
-  function nuevaTarea() {
-    setTareaSeleccionada(null)
-    setModalOpen(true)
-  }
+  function abrirTarea(t) { setTareaSeleccionada(t); setModalOpen(true) }
+  function nuevaTarea() { setTareaSeleccionada(null); setModalOpen(true) }
 
   if (loading) return <LoadingScreen />
 
   return (
     <div>
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{ margin: 0, fontSize: 22, color: '#e2e8f0', fontWeight: 700 }}>Dashboard</h1>
-        <p style={{ margin: '4px 0 0', color: '#64748b', fontSize: 14 }}>
-          Bienvenido, {usuario}
-        </p>
+      <div style={{ marginBottom: 24 }}>
+        <h1 style={{ margin: 0, fontSize: 22, color: '#e2e8f0', fontWeight: 700 }}>Principal</h1>
+        <p style={{ margin: '4px 0 0', color: '#64748b', fontSize: 14 }}>Bienvenido, {usuario}</p>
       </div>
 
       <BudgetBar
@@ -68,38 +56,32 @@ export default function Dashboard() {
         {[
           { label: 'Presupuesto total', value: formatCurrency(presupuesto.total), color: '#94a3b8' },
           { label: 'Gastado', value: formatCurrency(resumen.gastado), color: '#22c55e' },
-          { label: 'Comprometido (pendiente + en progreso)', value: formatCurrency(resumen.comprometido), color: '#3b82f6' },
+          { label: 'Comprometido', value: formatCurrency(resumen.comprometido), color: '#3b82f6' },
           { label: 'Disponible', value: formatCurrency(Math.max(0, resumen.disponible)), color: resumen.disponible < 0 ? '#ef4444' : '#f59e0b' },
         ].map(s => (
-          <div key={s.label} style={{ background: '#21253a', border: '1px solid #2d3148', borderRadius: 12, padding: 20 }}>
-            <div style={{ fontSize: 12, color: '#64748b', marginBottom: 6, fontWeight: 500 }}>{s.label}</div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: s.color }}>{s.value}</div>
+          <div key={s.label} style={{ background: '#21253a', border: '1px solid #2d3148', borderRadius: 12, padding: 16 }}>
+            <div style={{ fontSize: 11, color: '#64748b', marginBottom: 6, fontWeight: 500 }}>{s.label}</div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: s.color }}>{s.value}</div>
           </div>
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 20 }}>
-        <Card title="Tareas por estado">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {Object.entries(porEstado).map(([estado, data]) => (
-              <div key={estado} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: STATUS_COLORS[estado] }} />
-                  <span style={{ fontSize: 13, color: '#94a3b8' }}>{estado}</span>
-                </div>
-                <span style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0' }}>{data.cantidad}</span>
+      <Card title="Tareas por estado" style={{ marginBottom: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {Object.entries(porEstado).map(([estado, data]) => (
+            <div key={estado} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: STATUS_COLORS[estado] }} />
+                <span style={{ fontSize: 13, color: '#94a3b8' }}>{estado}</span>
               </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card title="Últimas actividades">
-          <ActivityFeed actividad={actividad} limit={5} />
-        </Card>
-      </div>
+              <span style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0' }}>{data.cantidad}</span>
+            </div>
+          ))}
+        </div>
+      </Card>
 
       {tareasUrgentes.length > 0 && (
-        <Card title={`Tareas urgentes (${tareasUrgentes.length})`} accentColor="#ef4444">
+        <Card title={`Tareas urgentes (${tareasUrgentes.length})`} accentColor="#ef4444" style={{ marginBottom: 16 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
             {tareasUrgentes.map(t => (
               <TaskCard key={t.id} tarea={t} onClick={abrirTarea} />
@@ -107,6 +89,10 @@ export default function Dashboard() {
           </div>
         </Card>
       )}
+
+      <Card title="Últimas actividades">
+        <ActivityFeed actividad={actividad} limit={5} />
+      </Card>
 
       <button
         onClick={nuevaTarea}
@@ -116,8 +102,7 @@ export default function Dashboard() {
           background: '#6366f1', border: 'none',
           color: 'white', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 20px rgba(99,102,241,0.4)',
-          zIndex: 20,
+          boxShadow: '0 4px 20px rgba(99,102,241,0.4)', zIndex: 20,
         }}
       >
         <Plus size={24} />
@@ -137,12 +122,13 @@ export default function Dashboard() {
   )
 }
 
-function Card({ title, children, accentColor }) {
+function Card({ title, children, accentColor, style }) {
   return (
     <div style={{
       background: '#21253a',
       border: `1px solid ${accentColor ? accentColor + '44' : '#2d3148'}`,
-      borderRadius: 12, padding: 20,
+      borderRadius: 12, padding: 20, marginBottom: 16,
+      ...style,
     }}>
       <h3 style={{ margin: '0 0 16px', fontSize: 14, color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
         {title}

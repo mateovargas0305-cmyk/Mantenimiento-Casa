@@ -59,5 +59,13 @@ export function useTasks() {
     await registrar(id, titulo, usuario, `marcó como ${nuevoEstado}`)
   }
 
-  return { tareas, loading, error, crearTarea, actualizarTarea, eliminarTarea, cambiarEstado }
+  async function marcarMaterialComprado(tareaId, materialIndex, comprado) {
+    const tarea = tareas.find(t => t.id === tareaId)
+    if (!tarea) return
+    const materiales = [...(tarea.materiales || [])]
+    materiales[materialIndex] = { ...materiales[materialIndex], comprado }
+    await updateDoc(doc(db, 'tareas', tareaId), { materiales })
+  }
+
+  return { tareas, loading, error, crearTarea, actualizarTarea, eliminarTarea, cambiarEstado, marcarMaterialComprado }
 }

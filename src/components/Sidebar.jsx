@@ -1,11 +1,12 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, CheckSquare, Calendar, DollarSign, Settings, Home } from 'lucide-react'
+import { LayoutDashboard, CheckSquare, Calendar, DollarSign, ShoppingCart, Settings, Home } from 'lucide-react'
 
 const links = [
-  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/', icon: LayoutDashboard, label: 'Principal' },
   { to: '/tareas', icon: CheckSquare, label: 'Tareas' },
   { to: '/calendario', icon: Calendar, label: 'Calendario' },
   { to: '/presupuesto', icon: DollarSign, label: 'Presupuesto' },
+  { to: '/compras', icon: ShoppingCart, label: 'Compras' },
   { to: '/config', icon: Settings, label: 'Configuración' },
 ]
 
