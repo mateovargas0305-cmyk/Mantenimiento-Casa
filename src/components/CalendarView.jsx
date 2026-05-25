@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { PRIORITY_COLORS } from '../utils/colors'
 import { formatDate } from '../utils/formatters'
 
-const DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+const DIAS_DESKTOP = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+const DIAS_MOBILE  = ['D', 'L', 'M', 'X', 'J', 'V', 'S']
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
 
 function getTimestampMs(ts) {
@@ -16,6 +17,13 @@ export default function CalendarView({ tareas, onClickTarea }) {
   const hoy = new Date()
   const [year, setYear] = useState(hoy.getFullYear())
   const [month, setMonth] = useState(hoy.getMonth())
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
+
+  useEffect(() => {
+    const fn = () => setIsMobile(window.innerWidth <= 768)
+    window.addEventListener('resize', fn)
+    return () => window.removeEventListener('resize', fn)
+  }, [])
 
   const primerDia = new Date(year, month, 1)
   const ultimoDia = new Date(year, month + 1, 0)
@@ -67,60 +75,104 @@ export default function CalendarView({ tareas, onClickTarea }) {
   }
 
   const listaMes = tareasDelMes()
+  const DIAS = isMobile ? DIAS_MOBILE : DIAS_DESKTOP
+  const maxChips = isMobile ? 1 : 3
+  const celdaMinHeight = isMobile ? 52 : 80
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 20, alignItems: 'start' }}>
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : '1fr 280px',
+      gap: 20,
+      alignItems: 'start',
+    }}>
+      {/* Grilla del calendario */}
       <div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
+        {/* Navegación mes */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <button onClick={prevMes} style={navBtn}><ChevronLeft size={18} /></button>
-          <h2 style={{ margin: 0, fontSize: 18, color: '#e2e8f0', minWidth: 180, textAlign: 'center' }}>
+          <h2 style={{ margin: 0, fontSize: isMobile ? 16 : 18, color: '#e2e8f0', textAlign: 'center' }}>
             {MESES[month]} {year}
           </h2>
           <button onClick={nextMes} style={navBtn}><ChevronRight size={18} /></button>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, marginBottom: 6 }}>
+        {/* Cabecera días */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, marginBottom: 4 }}>
           {DIAS.map(d => (
-            <div key={d} style={{ textAlign: 'center', fontSize: 12, color: '#64748b', padding: '6px 0', fontWeight: 600 }}>
+            <div key={d} style={{
+              textAlign: 'center', fontSize: isMobile ? 11 : 12,
+              color: '#64748b', padding: '4px 0', fontWeight: 600,
+            }}>
               {d}
             </div>
           ))}
         </div>
 
+        {/* Celdas */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2 }}>
           {celdas.map((dia, i) => {
             const ts = tareasEnDia(dia)
             const esHoy = dia && hoy.getFullYear() === year && hoy.getMonth() === month && hoy.getDate() === dia
             return (
               <div key={i} style={{
-                minHeight: 80, background: dia ? '#21253a' : 'transparent',
-                borderRadius: 6, padding: '6px 4px',
+                minHeight: celdaMinHeight,
+                background: dia ? '#21253a' : 'transparent',
+                borderRadius: 6,
+                padding: isMobile ? '4px 2px' : '6px 4px',
                 border: esHoy ? '1px solid #6366f1' : '1px solid transparent',
               }}>
                 {dia && (
                   <>
-                    <div style={{ fontSize: 12, color: esHoy ? '#6366f1' : '#94a3b8', fontWeight: esHoy ? 700 : 400, marginBottom: 4, textAlign: 'center' }}>
+                    <div style={{
+                      fontSize: isMobile ? 11 : 12,
+                      color: esHoy ? '#6366f1' : '#94a3b8',
+                      fontWeight: esHoy ? 700 : 400,
+                      marginBottom: 2,
+                      textAlign: 'center',
+                    }}>
                       {dia}
                     </div>
-                    {ts.slice(0, 3).map(t => {
+
+                    {ts.slice(0, maxChips).map(t => {
                       const inicio = esInicioEnDia(t, dia)
                       const color = PRIORITY_COLORS[t.prioridad] || '#64748b'
                       return (
                         <div key={t.id} onClick={() => onClickTarea(t)}
                           style={{
-                            fontSize: 10, padding: '2px 4px', marginBottom: 2,
+                            fontSize: isMobile ? 9 : 10,
+                            padding: isMobile ? '1px 2px' : '2px 4px',
+                            marginBottom: 1,
                             borderRadius: inicio ? 3 : '0 3px 3px 0',
                             background: `${color}${inicio ? '33' : '1a'}`,
-                            color, cursor: 'pointer',
-                            overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis',
-                            borderLeft: inicio ? `2px solid ${color}` : `2px solid ${color}88`,
+                            color,
+                            cursor: 'pointer',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                            borderLeft: `2px solid ${color}${inicio ? '' : '88'}`,
                             opacity: inicio ? 1 : 0.75,
                           }}>
-                          {!inicio && '· '}{t.titulo}
+                          {/* En mobile solo punto de color, sin texto */}
+                          {isMobile ? '' : (!inicio && '· ')}{isMobile ? ' ' : t.titulo}
                         </div>
                       )
                     })}
-                    {ts.length > 3 && <div style={{ fontSize: 10, color: '#64748b' }}>+{ts.length - 3}</div>}
+
+                    {/* Indicador de cantidad en mobile */}
+                    {isMobile && ts.length > 0 && (
+                      <div style={{
+                        fontSize: 9, textAlign: 'center', marginTop: 1,
+                        color: PRIORITY_COLORS[ts[0].prioridad] || '#64748b',
+                        fontWeight: 600,
+                      }}>
+                        {ts.length}
+                      </div>
+                    )}
+
+                    {!isMobile && ts.length > maxChips && (
+                      <div style={{ fontSize: 10, color: '#64748b' }}>+{ts.length - maxChips}</div>
+                    )}
                   </>
                 )}
               </div>
@@ -129,23 +181,35 @@ export default function CalendarView({ tareas, onClickTarea }) {
         </div>
       </div>
 
-      <div style={{ background: '#21253a', borderRadius: 12, border: '1px solid #2d3148', padding: 16 }}>
-        <h3 style={{ margin: '0 0 16px', fontSize: 14, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+      {/* Panel lateral — tareas del mes */}
+      <div style={{
+        background: '#21253a', borderRadius: 12,
+        border: '1px solid #2d3148', padding: 16,
+      }}>
+        <h3 style={{ margin: '0 0 14px', fontSize: 13, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           Tareas del mes
         </h3>
         {listaMes.length === 0 ? (
-          <p style={{ color: '#64748b', fontSize: 13 }}>Sin tareas este mes</p>
+          <p style={{ color: '#64748b', fontSize: 13, margin: 0 }}>Sin tareas este mes</p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {listaMes.map(t => (
               <div key={t.id} onClick={() => onClickTarea(t)}
                 style={{
                   padding: '10px 12px', borderRadius: 8,
-                  background: '#1a1d27', border: `1px solid ${PRIORITY_COLORS[t.prioridad] || '#64748b'}44`,
+                  background: '#1a1d27',
+                  border: `1px solid ${PRIORITY_COLORS[t.prioridad] || '#64748b'}44`,
                   cursor: 'pointer',
                 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', marginBottom: 4 }}>{t.titulo}</div>
-                <div style={{ fontSize: 11, color: '#64748b' }}>{formatDate(t.fechaInicio)}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', marginBottom: 3 }}>
+                  {t.titulo}
+                </div>
+                <div style={{ fontSize: 11, color: '#64748b' }}>
+                  {formatDate(t.fechaInicio)}
+                  {t.fechaFin && getTimestampMs(t.fechaFin) !== getTimestampMs(t.fechaInicio) && (
+                    <> → {formatDate(t.fechaFin)}</>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -158,5 +222,5 @@ export default function CalendarView({ tareas, onClickTarea }) {
 const navBtn = {
   background: '#21253a', border: '1px solid #2d3148',
   color: '#94a3b8', borderRadius: 8, padding: '6px 10px',
-  cursor: 'pointer', display: 'flex', alignItems: 'center',
+  cursor: 'pointer', display: 'flex', alignItems: 'center', flexShrink: 0,
 }
