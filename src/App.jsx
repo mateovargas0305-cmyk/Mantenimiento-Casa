@@ -15,7 +15,7 @@ function RequireAuth({ children }) {
 
 export default function App() {
   return (
-    <BrowserRouter basename="/mantenimiento-casa">
+    <BrowserRouter basename="/Mantenimiento-Casa">
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<RequireAuth><Layout /></RequireAuth>}>
