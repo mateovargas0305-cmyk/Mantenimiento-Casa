@@ -133,18 +133,6 @@ export default function Settings() {
           </div>
         </Section>
 
-        <Section title="Usuarios">
-          <p style={{ color: '#64748b', fontSize: 13, margin: '0 0 12px' }}>
-            Los usuarios se configuran directamente en <code style={{ color: '#a5b4fc', background: 'rgba(99,102,241,0.1)', padding: '2px 6px', borderRadius: 4 }}>src/config/users.js</code>
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {['Usuario1', 'Usuario2', 'Usuario3', 'Usuario4', 'Usuario5'].map(u => (
-              <div key={u} style={{ background: '#21253a', border: '1px solid #2d3148', borderRadius: 8, padding: '10px 14px', color: '#94a3b8', fontSize: 14 }}>
-                {u}
-              </div>
-            ))}
-          </div>
-        </Section>
       </div>
     </div>
   )
